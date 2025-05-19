@@ -1,11 +1,16 @@
-const pool = require('../config/db');
+const db = require('../config/db');
 
 exports.getStats = async (req, res) => {
   try {
-    // Fetch counts from MySQL
-    const [students] = await pool.query('SELECT COUNT(*) AS count FROM students');
-    const [teachers] = await pool.query('SELECT COUNT(*) AS count FROM teachers');
-    const [admins] = await pool.query('SELECT COUNT(*) AS count FROM admins');
+    const [students] = await db.query("SELECT COUNT(*) AS count FROM users WHERE role = 'student'");
+    const [teachers] = await db.query("SELECT COUNT(*) AS count FROM users WHERE role = 'teacher'");
+    const [admins] = await db.query("SELECT COUNT(*) AS count FROM users WHERE role = 'admin'");
+
+    console.log('Stats:', {
+      students: students[0].count,
+      teachers: teachers[0].count,
+      admins: admins[0].count,
+    });
 
     res.json({
       students: students[0].count,
@@ -13,7 +18,7 @@ exports.getStats = async (req, res) => {
       admins: admins[0].count
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to load stats" });
+    console.error('Error fetching stats:', err);
+    res.status(500).json({ error: 'Failed to load stats' });
   }
 };

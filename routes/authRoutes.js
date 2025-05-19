@@ -1,10 +1,10 @@
+// authRoutes.js
 const express = require('express');
-const { login } = require('../controllers/authController'); // Import the login function
+const router = express.Router();
+const { login, enroll } = require('../controllers/authController');
 
-const router = express.Router(); // Create a new router instance
-
-// Define the login route
+// Define your routes
 router.post('/login', login);
+router.post('/enroll', enroll);
 
-// Export the router
 module.exports = router;
